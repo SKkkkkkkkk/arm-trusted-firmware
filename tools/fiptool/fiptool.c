@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#ifndef _MSC_VER
-#include <sys/mount.h>
-#endif
+// #ifndef _MSC_VER
+// #include <sys/mount.h>
+// #endif
 #include <sys/types.h>
 #include <sys/stat.h>
 
