@@ -28,7 +28,7 @@ static meminfo_t bl2_tzram_layout;
 
 static console_t console;
 
-// static bool is_fwu_needed = false;
+static bool is_fwu_needed = false;
 
 meminfo_t *bl1_plat_sec_mem_layout(void)
 {
@@ -159,21 +159,21 @@ unsigned int plat_get_syscnt_freq2(void)
 
 void bl1_platform_setup(void)
 {
-	// void plat_io_setup(void);
-	// plat_io_setup();
+	void plat_io_setup(void);
+	plat_io_setup();
 	
-	// bool plat_bl1_fwu_needed(void);
-	// is_fwu_needed = plat_bl1_fwu_needed();
+	bool plat_bl1_fwu_needed(void);
+	is_fwu_needed = plat_bl1_fwu_needed();
 }
 
 /*******************************************************************************
  * The following function checks if Firmware update is needed,
  * by checking if TOC in FIP image is valid or not.
  ******************************************************************************/
-// unsigned int bl1_plat_get_next_image_id(void)
-// {
-// 	return  is_fwu_needed ? NS_BL1U_IMAGE_ID : BL2_IMAGE_ID;
-// }
+unsigned int bl1_plat_get_next_image_id(void)
+{
+	return  is_fwu_needed ? NS_BL1U_IMAGE_ID : BL2_IMAGE_ID;
+}
 
 // int bl1_plat_handle_pre_image_load(unsigned int image_id __unused)
 // {

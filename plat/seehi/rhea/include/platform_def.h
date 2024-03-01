@@ -11,7 +11,7 @@
 #include <lib/utils_def.h>
 #include <common/tbbr/tbbr_img_def.h>
 #include <plat/common/common_def.h>
-#include "_memmap_rhea.h"
+#include "memmap.h"
 
 #define PLAT_XLAT_TABLES_DYNAMIC 1
 #define BL1_BL2_MMU_SWITCH 1
@@ -87,10 +87,9 @@
 #define FIP_BACKEND_EMMC	1
 #define FIP_BACKEND_MEMMAP	2
 
-#define FWU_KEY_PIN 6
-#define BYPSECURE_PIN 16
-#define FIP_STORAGE_KEY_PIN0 7
-#define FIP_STORAGE_KEY_PIN1 8
+#define FWU_KEY_PIN 1
+#define FIP_STORAGE_KEY_PIN0 20
+#define FIP_STORAGE_KEY_PIN1 21
 
 /*
  * Partition memory into secure ROM, non-secure DRAM, secure "SRAM",
