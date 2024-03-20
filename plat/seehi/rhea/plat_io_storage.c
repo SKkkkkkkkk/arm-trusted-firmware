@@ -95,8 +95,8 @@ static struct plat_io_policy policies[] = {
 
 enum boot_device get_boot_dev(void)
 {
-	//pinmux_select(PORTB, FIP_STORAGE_KEY_PIN0, 7);
-	//pinmux_select(PORTB, FIP_STORAGE_KEY_PIN1, 7);
+	pinmux_select(PORTB, FIP_STORAGE_KEY_PIN0, 7);
+	pinmux_select(PORTB, FIP_STORAGE_KEY_PIN1, 7);
 	gpio_init_config_t gpio_init_config = {
 		.port = PORTB,
 		.pin = FIP_STORAGE_KEY_PIN0,
@@ -169,7 +169,7 @@ int plat_io_setup(void)
 	boot_dev = get_boot_dev();
 	if (boot_dev == BOOT_DEVICE_NONE) {
 		ERROR("Boot Device detection failed, Check GPIO_PROGSEL\n");
-		return -EINVAL;
+		while(1) asm volatile("wfi");
 	}
 
 	io_result = io_setup_table[boot_dev]((void*)boot_dev);
@@ -247,7 +247,7 @@ bool plat_bl1_fwu_needed(void)
 {
 	assert(fip_dev_handle);
 
-	//pinmux_select(PORTB, FWU_KEY_PIN, 7);
+	pinmux_select(PORTB, FWU_KEY_PIN, 7);
 	gpio_init_config_t gpio_init_config = {
 		.port = PORTB,
 		.pin = FWU_KEY_PIN,

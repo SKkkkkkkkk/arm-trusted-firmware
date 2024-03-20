@@ -77,10 +77,18 @@
 #define MAX_IO_HANDLES			4
 #define MAX_IO_BLOCK_DEVICES	1
 
-#define PLAT_PHY_ADDR_SPACE_SIZE	(1ULL << 32)
-#define PLAT_VIRT_ADDR_SPACE_SIZE	(1ULL << 32)
-#define MAX_MMAP_REGIONS		12
-#define MAX_XLAT_TABLES			6
+#define PLAT_PHY_ADDR_SPACE_SIZE	(1ULL << 40)
+#define PLAT_VIRT_ADDR_SPACE_SIZE	(1ULL << 40)
+#if defined(IMAGE_BL1)
+#	define MAX_MMAP_REGIONS		6
+#	define MAX_XLAT_TABLES		9
+#elif defined(IMAGE_BL2)
+#	define MAX_MMAP_REGIONS		5
+#	define MAX_XLAT_TABLES		7
+#elif defined(IMAGE_BL31)
+#	define MAX_MMAP_REGIONS		5
+#	define MAX_XLAT_TABLES		7
+#endif
 
 /***FIP Storages***/
 #define FIP_BACKEND_FLASH	0
@@ -144,7 +152,7 @@
 #define NS_BL1U_BASE 		BL1_RO_LIMIT  // NS_BL1U
 
 
-#define BL1_RW_BASE			(BL1_RW_LIMIT - (36*1024))
+#define BL1_RW_BASE			(BL1_RW_LIMIT - (44*1024))
 #define BL1_RW_LIMIT		(BL_RAM_LIMIT)
 
 /*

@@ -21,9 +21,6 @@
 	.globl	plat_report_exception
 
 func plat_report_exception
-	mrs x0, esr_el3
-	mrs x1, far_el3
-	mrs x2, elr_el3
 	b .
 endfunc plat_report_exception
 
