@@ -6,12 +6,13 @@
 
 #include <assert.h>
 
+#include <plat/common/platform.h>
+#include <plat_common.h>
 #include <platform_def.h>
 
 #include <arch.h>
 #include <arch_helpers.h>
 #include <common/bl_common.h>
-#include <plat/common/platform.h>
 
 #include <drivers/console.h>
 #include <drivers/ti/uart/uart_16550.h>
@@ -19,14 +20,10 @@
 
 #include <lib/xlat_tables/xlat_tables_v2.h>
 #include <lib/mmio.h>
-// #include <drivers/io/io_storage.h>
-// #include <time_stamp.h>
 
 /* Data structure which holds the extents of the trusted SRAM for BL1*/
 static meminfo_t bl1_tzram_layout;
 static meminfo_t bl2_tzram_layout;
-
-static console_t console;
 
 static bool is_fwu_needed = false;
 
@@ -78,33 +75,14 @@ int bl1_plat_handle_post_image_load(unsigned int image_id)
  ******************************************************************************/
 void bl1_early_platform_setup(void)
 {
-	int ret;
-	/* Initialize the console to provide early debug support */
-	(void)console;
-
 	mmio_write_32(GENERIC_TIMER_BASE + CNTCR_OFF,
 		CNTCR_FCREQ(0U) | CNTCR_EN);
-
-	ret = console_16550_register(PLAT_UART_BASE,
-				 PLAT_UART_CLK_IN_HZ,
-				 PLAT_CONSOLE_BAUDRATE,
-				 &console);
-	if(ret!=1)
-		while(1);
-
-	#define FRACTIONAL_VALUE_DELTA 625U
-	uint8_t dlf_value;
-	uint64_t fractional_value = ((PLAT_UART_CLK_IN_HZ*10000)/(16*PLAT_CONSOLE_BAUDRATE))%10000;
-	dlf_value = fractional_value/FRACTIONAL_VALUE_DELTA;
-	if((fractional_value%FRACTIONAL_VALUE_DELTA) >= (FRACTIONAL_VALUE_DELTA/2))
-		++dlf_value;
-	mmio_write_32(PLAT_UART_BASE + 0xc0, dlf_value);
-
-	console_set_scope(&console, CONSOLE_FLAG_BOOT | CONSOLE_FLAG_RUNTIME);
 
 	/* Allow BL1 to see the whole Trusted RAM */
 	bl1_tzram_layout.total_base = BL_RAM_BASE;
 	bl1_tzram_layout.total_size = BL_RAM_SIZE;
+
+	console_16550_with_dlf_init();
 
 	generic_delay_timer_init();
 	// TIME_STAMP_INIT();
@@ -125,26 +103,6 @@ BL_CODE_BASE, \
 BL1_CODE_END-BL_CODE_BASE, \
 MT_CODE|MT_SECURE)
 
-#define MAP_DEVICE	MAP_REGION_FLAT( \
-DEVICE_START_BASE, \
-(DEVICE_END_BASE - DEVICE_START_BASE), \
-MT_DEVICE|MT_RW|MT_SECURE)
-
-#define MAP_SHARED_RAM	MAP_REGION_FLAT( \
-SHARED_RAM_BASE,			\
-SHARED_RAM_SIZE,			\
-MT_DEVICE|MT_RW|MT_SECURE)
-
-#define MAP_SYSCTRL	MAP_REGION_FLAT( \
-SYSCTRL_CFG_BASE, \
-4096, \
-MT_DEVICE|MT_RW|MT_NS)
-
-#define MAP_MEMMAP_FIP	MAP_REGION_FLAT( \
-DDR_BASE, \
-1024*1024, \
-MT_MEMORY|MT_RW|MT_NS)
-
 void bl1_plat_arch_setup(void)
 {
 #if (BL1_BL2_MMU_SWITCH == 1)
@@ -153,8 +111,6 @@ void bl1_plat_arch_setup(void)
 		MAP_BL1_RO,
 		MAP_DEVICE,
 		MAP_SHARED_RAM,
-		MAP_SYSCTRL,
-		MAP_MEMMAP_FIP,
 		{0}
 	};
 	mmap_add(plat_bl1_region);
@@ -163,17 +119,9 @@ void bl1_plat_arch_setup(void)
 #endif
 }
 
-unsigned int plat_get_syscnt_freq2(void)
-{
-	return SYS_COUNTER_FREQ_IN_TICKS;
-}
-
 void bl1_platform_setup(void)
 {
-	void plat_io_setup(void);
 	plat_io_setup();
-	
-	bool plat_bl1_fwu_needed(void);
 	is_fwu_needed = plat_bl1_fwu_needed();
 }
 

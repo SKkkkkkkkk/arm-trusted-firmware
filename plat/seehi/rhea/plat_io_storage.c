@@ -144,15 +144,18 @@ static int memmap_io_setup(void* arg __unused)
 	assert(io_result == 0);
 
 	static const io_block_spec_t fip_block_spec = {
-		.offset = (DDR_BASE),
-		.length = (1024*1024)
+		.offset = MEMMAP_FIP_BASE,
+		.length = MEMMAP_FIP_SIZE
 	};
 	policies[FIP_IMAGE_ID].dev_init_spec = (uintptr_t)NULL;
 	policies[FIP_IMAGE_ID].io_open_spec = (uintptr_t)&fip_block_spec;
-	
-	mmap_add_dynamic_region(fip_block_spec.offset, fip_block_spec.offset,
-		fip_block_spec.length, MT_MEMORY | MT_RW);
-	
+
+	io_result = mmap_add_dynamic_region(fip_block_spec.offset, fip_block_spec.offset,
+		fip_block_spec.length, MT_MEMORY | MT_RW | MT_NS);
+	if (io_result != 0) {
+		ERROR("Error while mapping MEMMAP_FIP (%d).\n", io_result);
+		panic();
+	}
 	return io_result;
 }
 

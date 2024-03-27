@@ -77,14 +77,14 @@
 #define MAX_IO_HANDLES			4
 #define MAX_IO_BLOCK_DEVICES	1
 
-#define PLAT_PHY_ADDR_SPACE_SIZE	(1ULL << 40)
-#define PLAT_VIRT_ADDR_SPACE_SIZE	(1ULL << 40)
+#define PLAT_PHY_ADDR_SPACE_SIZE	(1ULL << 32)
+#define PLAT_VIRT_ADDR_SPACE_SIZE	(1ULL << 32)
 #if defined(IMAGE_BL1)
-#	define MAX_MMAP_REGIONS		6
-#	define MAX_XLAT_TABLES		9
-#elif defined(IMAGE_BL2)
 #	define MAX_MMAP_REGIONS		5
-#	define MAX_XLAT_TABLES		7
+#	define MAX_XLAT_TABLES		5
+#elif defined(IMAGE_BL2)
+#	define MAX_MMAP_REGIONS		6
+#	define MAX_XLAT_TABLES		6
 #elif defined(IMAGE_BL31)
 #	define MAX_MMAP_REGIONS		5
 #	define MAX_XLAT_TABLES		7
@@ -116,7 +116,7 @@
 #define FLASH_MAP_SIZE UL(0x01000000) //24bit, 16MB
 
 #define DEVICE_START_BASE				UART0_BASE
-#define DEVICE_END_BASE					round_up(AP_dNOC_BASE + 4096, PAGE_SIZE)
+#define DEVICE_END_BASE					round_up(IOMUX_CFG_BASE + 4096, PAGE_SIZE)
 
 #define PLATFORM_STACK_SIZE 	U(4096)
 #define SHARED_RAM_BASE			SRAM_BASE 
@@ -179,16 +179,29 @@
 #	define SCP_BL2_LIMIT			(_1MB + SCP_BL2_BASE)
 #endif
 
-/* Special value used to verify platform parameters from BL2 to BL3-1 */
+/* Special value used to verify platform parameters from BL2 to BL31 */
 #define RHEA_BL31_PLAT_PARAM_VAL	0x0f1e2d3c4b5a6978ULL
-#define BL31_IMAGE_OFFSET			(0x42000000)
-#define BL31_IMAGE_MAX_SIZE			(_1MB*2)
+
+#define MAP_DEVICE	MAP_REGION_FLAT( \
+DEVICE_START_BASE, \
+(DEVICE_END_BASE - DEVICE_START_BASE), \
+MT_DEVICE|MT_RW|MT_SECURE)
+
+#define MAP_SHARED_RAM	MAP_REGION_FLAT( \
+SHARED_RAM_BASE,			\
+SHARED_RAM_SIZE,			\
+MT_DEVICE|MT_RW|MT_SECURE)
+
+#define MEMMAP_FIP_BASE				DDR_BASE
+#define MEMMAP_FIP_SIZE				(1024*1024U)
+
+#define BL33_IMAGE_OFFSET			(0x42000000)
+#define BL33_IMAGE_MAX_SIZE			(1024*1024U)
 
 #define PLAT_UART_BASE				UART0_BASE
 #define PLAT_UART_CLK_IN_HZ			U(25000000)
 #define PLAT_CONSOLE_BAUDRATE		U(115200)
 
 #define SYS_COUNTER_FREQ_IN_TICKS	U(24000000)
-
 
 #endif /* PLATFORM_DEF_H */
