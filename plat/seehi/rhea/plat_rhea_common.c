@@ -17,7 +17,8 @@ void console_16550_with_dlf_init(void)
 					PLAT_UART_CLK_IN_HZ,
 					PLAT_CONSOLE_BAUDRATE,
 					&console);
-	assert(ret == 1);
+	if(ret != 1)
+		panic();
 
 	#define FRACTIONAL_VALUE_DELTA 625UL
 	uint8_t dlf_value;
