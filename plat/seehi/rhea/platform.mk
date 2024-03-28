@@ -35,3 +35,22 @@ common/desc_image_load.c \
 plat/seehi/rhea/bl2/plat_bl2_setup.c \
 plat/seehi/rhea/bl2/rhea_bl2_mem_params_desc.c \
 plat/seehi/rhea/bl2/rhea_image_load.c
+
+# Include GICv3 driver files
+GICV3_SUPPORT_GIC600 := 1
+include drivers/arm/gic/v3/gicv3.mk
+RHEA_GICV3_SOURCES	:=	\
+${GICV3_SOURCES} \
+plat/common/plat_gicv3.c \
+plat/seehi/rhea/bl31/rhea_gicv3.c
+
+BL31_SOURCES +=	\
+lib/cpus/aarch64/aem_generic.S \
+lib/cpus/aarch64/cortex_a55.S
+
+BL31_SOURCES += \
+${RHEA_GICV3_SOURCES} \
+plat/common/plat_psci_common.c \
+plat/seehi/rhea/bl31/plat_bl31_setup.c \
+plat/seehi/rhea/bl31/rhea_pm.c \
+plat/seehi/rhea/bl31/rhea_topology.c

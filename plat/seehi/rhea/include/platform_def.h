@@ -204,4 +204,9 @@ MT_DEVICE|MT_RW|MT_SECURE)
 
 #define SYS_COUNTER_FREQ_IN_TICKS	U(24000000)
 
+#define ITScount 1
+#define RDcount  4
+#define GICD_BASE	GIC600_BASE
+#define GICR_BASE	(GIC600_BASE + ((4 + (2 * ITScount)) << 16))
+
 #endif /* PLATFORM_DEF_H */
