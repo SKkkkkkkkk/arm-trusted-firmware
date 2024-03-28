@@ -55,3 +55,8 @@ env/
 venv/
 compile_commands.json
 .vscode/
+poetry.lock
+*drawio.bkp
+*drawio.dtmp
+gdb*
+*.log
