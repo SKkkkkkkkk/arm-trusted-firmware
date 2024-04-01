@@ -7,9 +7,10 @@
 #include <lib/mmio.h>
 #include <lib/xlat_tables/xlat_tables_v2.h>
 #include <drivers/io/io_driver.h>
+#include <drivers/io/io_storage.h>
 #include <drivers/io/io_fip.h>
 #include <drivers/io/io_memmap.h>
-#include <drivers/io/io_storage.h>
+#include <io_flash.h>
 #include <dw_apb_gpio.h>
 
 enum boot_device {
@@ -159,8 +160,42 @@ static int memmap_io_setup(void* arg __unused)
 	return io_result;
 }
 
+static int spi_flash_io_setup(void* arg)
+{
+	int io_result;
+
+	io_result = register_io_dev_flash(&backend_dev_con);
+	assert(io_result == 0);
+
+	/* Open connections to devices and cache the handles */
+	io_result = io_dev_open(backend_dev_con, (uintptr_t)NULL,
+				&backend_dev_handle);
+	assert(io_result == 0);
+
+	static io_flash_dev_init_spec_t io_flash_dev_init_spec = {
+		.spi_id = BOOTSPI_ID,
+		.map_mode = false,
+		.clk_div = SPI_CLK_DIV,
+		.spi_mode = 3,
+		.flash_model = UNKNOW_FLASH_MODEL
+	};
+	static const io_flash_io_open_spec_t io_flash_io_open_spec = {
+		.flash_block.offset = (FLASH_MAP_BASE + 512*1024),
+		.flash_block.length = 0x100000,
+	};
+	policies[FIP_IMAGE_ID].dev_init_spec = (uintptr_t)&io_flash_dev_init_spec;
+	policies[FIP_IMAGE_ID].io_open_spec = (uintptr_t)&io_flash_io_open_spec;
+
+	if ( !( ( !is_boot_from_flash()/*rom启动*/ && (io_flash_dev_init_spec.map_mode == false)/*不使用map模式*/ ) ) )
+	{
+		mmap_add_dynamic_region(io_flash_io_open_spec.flash_block.offset, io_flash_io_open_spec.flash_block.offset,
+		io_flash_io_open_spec.flash_block.length, MT_MEMORY | MT_RW | MT_SECURE);
+	}
+	return io_result;
+}
+
 static int (* const io_setup_table[])(void*) = {
-	[BOOT_DEVICE_BOOTSPI]	= memmap_io_setup,
+	[BOOT_DEVICE_BOOTSPI]	= spi_flash_io_setup,
 	[BOOT_DEVICE_EMMC]		= memmap_io_setup,
 	[BOOT_DEVICE_MEMMAP]	= memmap_io_setup,
 };
