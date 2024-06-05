@@ -26,11 +26,94 @@
 	wa_cve_2022_23960_bhb_vector_table CORTEX_A715_BHB_LOOP_COUNT, cortex_a715
 #endif /* WORKAROUND_CVE_2022_23960 */
 
-workaround_runtime_start cortex_a715, ERRATUM(2561034), ERRATA_A715_2561034
+workaround_reset_start cortex_a715, ERRATUM(2331818), ERRATA_A715_2331818
+        sysreg_bit_set CORTEX_A715_CPUACTLR2_EL1, BIT(20)
+workaround_reset_end cortex_a715, ERRATUM(2331818)
+
+check_erratum_ls cortex_a715, ERRATUM(2331818), CPU_REV(1, 0)
+
+workaround_reset_start cortex_a715, ERRATUM(2344187), ERRATA_A715_2344187
+	/* GCR_EL1 is only present with FEAT_MTE2. */
+	mrs x1, ID_AA64PFR1_EL1
+	ubfx x0, x1, ID_AA64PFR1_EL1_MTE_SHIFT, #4
+	cmp x0, #MTE_IMPLEMENTED_ELX
+	bne #1f
+	sysreg_bit_set GCR_EL1, GCR_EL1_RRND_BIT
+
+1:
+	/* Mitigation upon ERETAA and ERETAB. */
+	mov x0, #2
+	msr CORTEX_A715_CPUPSELR_EL3, x0
+	isb
+	ldr x0, =0xd69f0bff
+	msr CORTEX_A715_CPUPOR_EL3, x0
+	ldr x0, =0xfffffbff
+	msr CORTEX_A715_CPUPMR_EL3, x0
+	mov x1, #0
+	orr x1, x1, #(1<<0)
+	orr x1, x1, #(3<<4)
+	orr x1, x1, #(0xf<<6)
+	orr x1, x1, #(1<<13)
+	orr x1, x1, #(1<<53)
+	msr CORTEX_A715_CPUPCR_EL3, x1
+workaround_reset_end cortex_a715, ERRATUM(2344187)
+
+check_erratum_ls cortex_a715, ERRATUM(2344187), CPU_REV(1, 0)
+
+workaround_reset_start cortex_a715, ERRATUM(2413290), ERRATA_A715_2413290
+/* Erratum 2413290 workaround is required only if SPE is enabled */
+#if ENABLE_SPE_FOR_NS != 0
+	/* Check if Static profiling extension is implemented or present. */
+	mrs x1, id_aa64dfr0_el1
+	ubfx x0, x1, ID_AA64DFR0_PMS_SHIFT, #4
+	cbz x0, 1f
+	/* Apply the workaround by setting CPUACTLR_EL1[58:57] = 0b11. */
+	sysreg_bit_set CORTEX_A715_CPUACTLR_EL1, BIT(57)
+	sysreg_bit_set CORTEX_A715_CPUACTLR_EL1, BIT(58)
+1:
+#endif
+workaround_reset_end cortex_a715, ERRATUM(2413290)
+
+check_erratum_range cortex_a715, ERRATUM(2413290), CPU_REV(1,0), CPU_REV(1, 0)
+
+workaround_reset_start cortex_a715, ERRATUM(2420947), ERRATA_A715_2420947
+        sysreg_bit_set CORTEX_A715_CPUACTLR2_EL1, BIT(33)
+workaround_reset_end cortex_a715, ERRATUM(2420947)
+
+check_erratum_range cortex_a715, ERRATUM(2420947), CPU_REV(1, 0), CPU_REV(1, 0)
+
+workaround_reset_start cortex_a715, ERRATUM(2429384), ERRATA_A715_2429384
+        sysreg_bit_set CORTEX_A715_CPUACTLR2_EL1, BIT(27)
+workaround_reset_end cortex_a715, ERRATUM(2429384)
+
+check_erratum_range cortex_a715, ERRATUM(2429384), CPU_REV(1, 0), CPU_REV(1, 0)
+
+workaround_reset_start cortex_a715, ERRATUM(2561034), ERRATA_A715_2561034
 	sysreg_bit_set	CORTEX_A715_CPUACTLR2_EL1, BIT(26)
-workaround_runtime_end cortex_a715, ERRATUM(2561034), NO_ISB
+workaround_reset_end cortex_a715, ERRATUM(2561034)
 
 check_erratum_range cortex_a715, ERRATUM(2561034), CPU_REV(1, 0), CPU_REV(1, 0)
+
+workaround_reset_start cortex_a715, ERRATUM(2728106), ERRATA_A715_2728106
+	mov x0, #3
+	msr CORTEX_A715_CPUPSELR_EL3, x0
+	isb
+	ldr x0, =0xd503339f
+	msr CORTEX_A715_CPUPOR_EL3, x0
+	ldr x0, =0xfffff3ff
+	msr CORTEX_A715_CPUPMR_EL3, x0
+	mov x0, #1
+	orr x0, x0, #(3<<4)
+	orr x0, x0, #(0xf<<6)
+	orr x0, x0, #(1<<13)
+	orr x0, x0, #(1<<20)
+	orr x0, x0, #(1<<22)
+	orr x0, x0, #(1<<31)
+	orr x0, x0, #(1<<50)
+	msr CORTEX_A715_CPUPCR_EL3, x0
+workaround_reset_end cortex_a715, ERRATUM(2728106)
+
+check_erratum_ls cortex_a715, ERRATUM(2728106), CPU_REV(1, 1)
 
 workaround_reset_start cortex_a715, CVE(2022, 23960), WORKAROUND_CVE_2022_23960
 #if IMAGE_BL31
