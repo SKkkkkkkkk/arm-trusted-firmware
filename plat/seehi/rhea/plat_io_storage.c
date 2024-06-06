@@ -14,8 +14,8 @@
 #include <dw_apb_gpio.h>
 
 enum boot_device {
-	BOOT_DEVICE_BOOTSPI = 0,
-	BOOT_DEVICE_EMMC = 1,
+	BOOT_DEVICE_EMMC = 0,
+	BOOT_DEVICE_BOOTSPI = 1,
 	BOOT_DEVICE_NONE = 2
 };
 
@@ -107,7 +107,7 @@ enum boot_device get_boot_dev(void)
 	uint8_t pin_status = \
 	(uint8_t)gpio_read_pin(PORTB, FIP_STORAGE_KEY_PIN0);
 
-	return ((pin_status&1) == 0) ? BOOT_DEVICE_BOOTSPI : BOOT_DEVICE_EMMC;
+	return ((pin_status&1) == 0) ? BOOT_DEVICE_EMMC : BOOT_DEVICE_BOOTSPI;
 }
 
 int io_fip_setup(void)
@@ -188,8 +188,8 @@ static int spi_flash_io_setup(void* arg)
 }
 
 static int (* const io_setup_table[])(void*) = {
+	[BOOT_DEVICE_EMMC]		= memmap_io_setup,
 	[BOOT_DEVICE_BOOTSPI]	= spi_flash_io_setup,
-	[BOOT_DEVICE_EMMC]		= memmap_io_setup
 };
 
 int plat_io_setup(void)
