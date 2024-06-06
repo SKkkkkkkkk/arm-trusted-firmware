@@ -14,10 +14,9 @@
 #include <dw_apb_gpio.h>
 
 enum boot_device {
-	BOOT_DEVICE_BOOTSPI,
-	BOOT_DEVICE_EMMC,
-	BOOT_DEVICE_MEMMAP,
-	BOOT_DEVICE_NONE
+	BOOT_DEVICE_BOOTSPI = 0,
+	BOOT_DEVICE_EMMC = 1,
+	BOOT_DEVICE_NONE = 2
 };
 
 static enum boot_device boot_dev = BOOT_DEVICE_NONE;
@@ -97,7 +96,6 @@ static struct plat_io_policy policies[] = {
 enum boot_device get_boot_dev(void)
 {
 	pinmux_select(PORTB, FIP_STORAGE_KEY_PIN0, 7);
-	pinmux_select(PORTB, FIP_STORAGE_KEY_PIN1, 7);
 	gpio_init_config_t gpio_init_config = {
 		.port = PORTB,
 		.pin = FIP_STORAGE_KEY_PIN0,
@@ -105,16 +103,11 @@ enum boot_device get_boot_dev(void)
 		.gpio_mode = GPIO_Input_Mode
 	};
 	gpio_init(&gpio_init_config);
-	gpio_init_config.pin = FIP_STORAGE_KEY_PIN1;
-	gpio_init(&gpio_init_config);
 
 	uint8_t pin_status = \
-	(uint8_t)gpio_read_pin(PORTB, FIP_STORAGE_KEY_PIN1) << 1 | 
 	(uint8_t)gpio_read_pin(PORTB, FIP_STORAGE_KEY_PIN0);
 
-	if(pin_status < (uint8_t)BOOT_DEVICE_MEMMAP) // GPIO cannot use BOOT_DEVICE_MEMMAP.
-		return (enum boot_device)pin_status;
-	return BOOT_DEVICE_NONE;
+	return ((pin_status&1) == 0) ? BOOT_DEVICE_BOOTSPI : BOOT_DEVICE_EMMC;
 }
 
 int io_fip_setup(void)
@@ -196,8 +189,7 @@ static int spi_flash_io_setup(void* arg)
 
 static int (* const io_setup_table[])(void*) = {
 	[BOOT_DEVICE_BOOTSPI]	= spi_flash_io_setup,
-	[BOOT_DEVICE_EMMC]		= memmap_io_setup,
-	[BOOT_DEVICE_MEMMAP]	= memmap_io_setup,
+	[BOOT_DEVICE_EMMC]		= memmap_io_setup
 };
 
 int plat_io_setup(void)
@@ -209,6 +201,7 @@ int plat_io_setup(void)
 		ERROR("Boot Device detection failed, Check GPIO_PROGSEL\n");
 		while(1) asm volatile("wfi");
 	}
+	NOTICE("Boot Device: %s\n", (boot_dev == BOOT_DEVICE_BOOTSPI) ? "BOOTSPI" : "EMMC");
 
 	io_result = io_setup_table[boot_dev]((void*)boot_dev);
 	assert(io_result==0);

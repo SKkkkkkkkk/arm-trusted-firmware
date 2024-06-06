@@ -60,3 +60,5 @@ poetry.lock
 *drawio.dtmp
 gdb*
 *.log
+.DS_Store
+*.bin

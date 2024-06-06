@@ -96,8 +96,8 @@
 #define FIP_BACKEND_MEMMAP	2
 
 #define FWU_KEY_PIN 1
-#define FIP_STORAGE_KEY_PIN0 20
-#define FIP_STORAGE_KEY_PIN1 21
+#define BYPSECURE_KEY_PIN 	 2
+#define FIP_STORAGE_KEY_PIN0 4
 
 /*
  * Partition memory into secure ROM, non-secure DRAM, secure "SRAM",
