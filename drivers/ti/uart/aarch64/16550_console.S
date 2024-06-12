@@ -9,6 +9,9 @@
 #include <assert_macros.S>
 #include <console_macros.S>
 #include <drivers/ti/uart/uart_16550.h>
+#ifdef PLAT_rhea
+	#include <memmap.h>
+#endif
 
 	/*
 	 * "core" functions are low-level implementations that don't require
@@ -139,7 +142,9 @@ func console_16550_core_putc
 	cmp	x1, #0
 	ASM_ASSERT(ne)
 #endif /* ENABLE_ASSERTIONS */
-
+#ifdef PLAT_rhea
+	mov_imm x3, SYSCTRL_CFG_BASE
+#endif
 	/* Prepend '\r' to '\n' */
 	cmp	w0, #0xA
 	b.ne	2f
@@ -150,6 +155,9 @@ func console_16550_core_putc
 	b.ne	1b
 	mov	w2, #0xD		/* '\r' */
 	str	w2, [x1, #UARTTX]
+#ifdef PLAT_rhea
+	str w2, [x3, #0xfe0]
+#endif
 
 	/* Check if the transmit FIFO is full */
 2:	ldr	w2, [x1, #UARTLSR]
@@ -157,6 +165,9 @@ func console_16550_core_putc
 	cmp	w2, #(UARTLSR_TEMT | UARTLSR_THRE)
 	b.ne	2b
 	str	w0, [x1, #UARTTX]
+#ifdef PLAT_rhea
+	str w0, [x3, #0xfe0]
+#endif
 	ret
 endfunc console_16550_core_putc
 
