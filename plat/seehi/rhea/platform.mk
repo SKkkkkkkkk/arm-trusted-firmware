@@ -39,7 +39,8 @@ lib/cpus/aarch64/cortex_a55.S
 
 BL1_SOURCES += \
 ${BL1_BL2_COMMON_SOURCES} \
-plat/seehi/rhea/bl1/plat_bl1_setup.c
+plat/seehi/rhea/bl1/plat_bl1_setup.c \
+plat/seehi/rhea/bl1/bl1_img_desc.c
 
 BL2_SOURCES += \
 ${BL1_BL2_COMMON_SOURCES} \
