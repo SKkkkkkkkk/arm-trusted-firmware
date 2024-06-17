@@ -6,7 +6,9 @@
 
 unsigned int plat_get_syscnt_freq2(void)
 {
-	return mmio_read_32(GENERIC_TIMER_BASE + CNTFID_OFF);
+	uint32_t freq = mmio_read_32(GENERIC_TIMER_BASE + CNTFID_OFF);
+	write_cntfrq_el0(freq);
+	return freq;
 }
 
 static console_t console;
