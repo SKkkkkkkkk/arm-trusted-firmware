@@ -67,3 +67,8 @@ plat/common/plat_psci_common.c \
 plat/seehi/rhea/bl31/plat_bl31_setup.c \
 plat/seehi/rhea/bl31/rhea_pm.c \
 plat/seehi/rhea/bl31/rhea_topology.c
+
+rom.bin: bl1
+	$(ECHO) "  DD      $@"
+	$(Q)dd if=${BUILD_PLAT}/bl1.bin of=${BUILD_PLAT}/$@ bs=76K conv=sync status=none
+	$(Q)cat ${NS_BL1U} >> ${BUILD_PLAT}/$@
