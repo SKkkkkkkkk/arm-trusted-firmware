@@ -12,7 +12,7 @@
 #endif
 
 #define CPU_READ_BLOCK_SIZE SPI_FIFO_DEPTH
-#define BLOCK_SIZE_DMA 		DMAC_FIFO_DEPTH
+#define BLOCK_SIZE_DMA 		MIN(DMAC_FIFO_DEPTH, SPI_CTRLR1_MAX_SIZE)
 
 #include <arch_helpers.h>
 #define CLEAN_DCACHE_RANGE(addr, size) clean_dcache_range((uintptr_t)addr, size)
@@ -481,7 +481,7 @@ void flash_write_dma(spi_id_t spi_id, uint32_t addr, uint8_t *buf, uint32_t size
 static inline void _flash_read_dma(spi_id_t spi_id, uint32_t addr, uint8_t* const buf, uint32_t size)
 {
 	assert(buf);
-	// assert(size <= DMAC_FIFO_DEPTH);
+	// assert(size <= MIN(DMAC_FIFO_DEPTH, SPI_CTRLR1_MAX_SIZE));
 	if(size==0)
 		return;
 	uint8_t cmd[4];
@@ -556,7 +556,7 @@ bool is_dw_spi_eeprom_read_dma_end(spi_id_t spi_id, DMA_Channel_t ch);
 uint32_t flash_read_dma_start(spi_id_t spi_id, DMA_Channel_t* const ch, uint32_t addr, uint8_t* const buf, uint32_t size)
 {
 	assert(buf);
-	// assert(size <= DMAC_FIFO_DEPTH);
+	// assert(size <= MIN(DMAC_FIFO_DEPTH, SPI_CTRLR1_MAX_SIZE));
 	if(size==0)
 		return 0;
 	uint8_t cmd[4];
