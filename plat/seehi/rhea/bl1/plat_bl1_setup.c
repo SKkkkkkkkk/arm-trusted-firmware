@@ -77,6 +77,7 @@ void bl1_early_platform_setup(void)
 {
 	mmio_write_32(GENERIC_TIMER_BASE + CNTCR_OFF,
 		CNTCR_FCREQ(0U) | CNTCR_EN);
+	write_cntfrq_el0(plat_get_syscnt_freq2());
 
 	/* Allow BL1 to see the whole Trusted RAM */
 	bl1_tzram_layout.total_base = BL_RAM_BASE;
