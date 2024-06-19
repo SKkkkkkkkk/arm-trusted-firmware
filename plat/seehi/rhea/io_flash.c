@@ -101,7 +101,7 @@ static int io_flash_dev_init(io_dev_info_t *dev_info, const uintptr_t init_param
 
 		uint8_t flash_id[3];
 		flash_read_id(in_use_spi_id, flash_id, 3);
-		INFO("SPI_FLASH: Flash ID: 0x%x 0x%x 0x%x.\n\r", flash_id[0], flash_id[1], flash_id[2]);
+		INFO("SPI_FLASH: Flash ID: 0x%02x%02x%02x.\n\r", flash_id[0], flash_id[1], flash_id[2]);
 		
 		if(flash_id[1]==0xff || flash_id[2]==0xff || flash_id[1]==0x00 || flash_id[2]==0x00)
 		{
@@ -133,7 +133,7 @@ static int io_flash_dev_init(io_dev_info_t *dev_info, const uintptr_t init_param
 	}
 	else
 	{
-		mmio_write_32(BOOTSPI_BASE, 0); //默认就是map模式
+		mmio_write_32(BOOTSPI_BASE, 0);
 		NOTICE("SPI_FLASH: Bootspi is in MAP_MODE.\n\r");
 		map_mode = true;
 		flash_quad_output_fast_read = false;
