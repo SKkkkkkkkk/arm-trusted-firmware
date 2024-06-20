@@ -7,6 +7,7 @@ import subprocess
 import argparse
 import time
 import serial
+import textwrap
 
 def get_processes_using_port(port):
     """Get the list of processes using the specified serial port."""
@@ -71,7 +72,27 @@ def send_firmware(port, firmware_file):
     return True
 
 def main():
-    parser = argparse.ArgumentParser(description="This is a fip update tool for Rhea.")
+    parser = argparse.ArgumentParser(
+        description="This is a fip update tool for Rhea.",
+        formatter_class=argparse.RawTextHelpFormatter,
+        epilog=textwrap.dedent("""\
+            Examples of usage:
+              1. Update fip with only fip, in this case the fwu_sram.default will be used as fwu_sram:
+                 ./fip_updater.py -p /dev/ttyACM0 --fip fip.bin
+
+              2. Update fip with explicit fwu_sram and fip:
+                 ./fip_updater.py -p /dev/ttyACM0 --fwu_sram fwu_sram.bin --fip fip.bin
+
+              3. Run a sram program only:
+                 ./fip_updater.py -p /dev/ttyACM0 --fwu_sram sram_program.bin
+
+            Note:
+               1. This tool will suspend processes using the same serial port during the update.
+               2. This tool requires sx/lsx to be installed for XMODEM transfer.
+                  1) For Linux: sudo apt install lrzsz
+                  2) For macOS: brew install lrzsz
+        """)
+    )
     parser.add_argument('-p', '--serial_port', metavar="PORT", required=True, help="The serial port to use (e.g., /dev/ttyACM0)")
     parser.add_argument('--fwu_sram', metavar="FILENAME", help="The sram program file to send (e.g., fwu_sram.bin)")
     parser.add_argument('--fip', metavar="FILENAME", help="The fip file to send (e.g., fip.bin)")
