@@ -12,6 +12,7 @@
 #include <drivers/io/io_memmap.h>
 #include <io_flash.h>
 #include <dw_apb_gpio.h>
+#include <io_mmc.h>
 
 enum boot_device {
 	BOOT_DEVICE_EMMC = 0,
@@ -125,7 +126,7 @@ int io_fip_setup(void)
 	return io_result;
 }
 
-static int memmap_io_setup(void* arg __unused)
+static __unused int memmap_io_setup(void* arg __unused)
 {
 	int io_result;
 
@@ -150,6 +151,31 @@ static int memmap_io_setup(void* arg __unused)
 		ERROR("Error while mapping MEMMAP_FIP (%d).\n", io_result);
 		panic();
 	}
+	return io_result;
+}
+
+static int emmc_io_setup(void* arg __unused)
+{
+	int io_result = -1;
+	static io_mmc_dev_spec_t io_mmc_dev_init_spec;
+	static const io_mmc_io_open_spec_t io_mmc_io_open_spec = {
+		.mmc_block.offset = 512*1024,
+		.mmc_block.length = 0xa00000,
+		.block_size = 512,
+	};
+
+	io_result = register_io_dev_mmc(&backend_dev_con);
+	assert(io_result == 0);
+
+	/* Open connections to devices and cache the handles */
+	io_result = io_dev_open(backend_dev_con, (uintptr_t)NULL, &backend_dev_handle);
+	assert(io_result == 0);
+
+	io_mmc_dev_init_spec.idx = FIP_BACKEND_EMMC;
+
+	policies[FIP_IMAGE_ID].dev_init_spec = (uintptr_t)&io_mmc_dev_init_spec;
+	policies[FIP_IMAGE_ID].io_open_spec = (uintptr_t)&io_mmc_io_open_spec;
+
 	return io_result;
 }
 
@@ -188,7 +214,7 @@ static int spi_flash_io_setup(void* arg)
 }
 
 static int (* const io_setup_table[])(void*) = {
-	[BOOT_DEVICE_EMMC]		= memmap_io_setup,
+	[BOOT_DEVICE_EMMC]		= emmc_io_setup,
 	[BOOT_DEVICE_BOOTSPI]	= spi_flash_io_setup,
 };
 

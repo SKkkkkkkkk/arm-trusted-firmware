@@ -202,6 +202,8 @@ MT_DEVICE|MT_RW|MT_SECURE)
 #define PLAT_UART_CLK_IN_HZ			U(25000000)
 #define PLAT_CONSOLE_BAUDRATE		U(115200)
 
+#define PLAT_MMC_CLK_IN_HZ          U(100000000)
+
 #define ITScount 1
 #define RDcount  4
 #define GICD_BASE	GIC600_BASE
