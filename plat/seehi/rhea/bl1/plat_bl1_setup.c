@@ -21,6 +21,8 @@
 #include <lib/xlat_tables/xlat_tables_v2.h>
 #include <lib/mmio.h>
 
+#include <time_stamp.h>
+
 /* Data structure which holds the extents of the trusted SRAM for BL1*/
 static meminfo_t bl1_tzram_layout;
 static meminfo_t bl2_tzram_layout;
@@ -65,7 +67,7 @@ int bl1_plat_handle_post_image_load(unsigned int image_id)
 	VERBOSE("BL1: BL2 memory layout address = %p\n",
 		(void *)&bl2_tzram_layout);
 
-	// TIME_STAMP(); // bl1_load_bl2 end.
+	TIME_STAMP(); // bl1_load_bl2 end.
 	return 0;
 }
 
@@ -78,6 +80,7 @@ void bl1_early_platform_setup(void)
 	mmio_write_32(GENERIC_TIMER_BASE + CNTCR_OFF,
 		CNTCR_FCREQ(0U) | CNTCR_EN);
 	write_cntfrq_el0(plat_get_syscnt_freq2());
+	TIME_STAMP_INIT();
 
 	/* Allow BL1 to see the whole Trusted RAM */
 	bl1_tzram_layout.total_base = BL_RAM_BASE;
@@ -86,7 +89,6 @@ void bl1_early_platform_setup(void)
 	console_16550_with_dlf_init();
 
 	generic_delay_timer_init();
-	// TIME_STAMP_INIT();
 }
 
 /******************************************************************************
@@ -135,8 +137,8 @@ unsigned int bl1_plat_get_next_image_id(void)
 	return  is_fwu_needed ? NS_BL1U_IMAGE_ID : BL2_IMAGE_ID;
 }
 
-// int bl1_plat_handle_pre_image_load(unsigned int image_id __unused)
-// {
-// 	TIME_STAMP(); // bl1_load_bl2 start.
-// 	return 0;
-// }
+int bl1_plat_handle_pre_image_load(unsigned int image_id __unused)
+{
+	TIME_STAMP(); // bl1_load_bl2 start.
+	return 0;
+}

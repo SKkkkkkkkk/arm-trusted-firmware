@@ -28,6 +28,7 @@ size_t strlen(const char *s);
 size_t strnlen(const char *s, size_t maxlen);
 char *strrchr(const char *p, int ch);
 size_t strlcpy(char * dst, const char * src, size_t dsize);
+#define strncpy(dest, src, n) strlcpy(dest, src, n)
 size_t strlcat(char * dst, const char * src, size_t dsize);
 char *strtok_r(char *s, const char *delim, char **last);
 

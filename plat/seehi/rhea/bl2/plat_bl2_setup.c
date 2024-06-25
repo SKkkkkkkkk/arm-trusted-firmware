@@ -25,6 +25,8 @@
 #include <lib/mmio.h>
 #include <lib/xlat_tables/xlat_tables_v2.h>
 
+#include <time_stamp.h>
+
 /* Data structure which holds the extents of the trusted SRAM for BL2 */
 static meminfo_t bl2_tzram_layout __aligned(CACHE_WRITEBACK_GRANULE);
 
@@ -107,7 +109,11 @@ static int rhea_bl2_handle_post_image_load(unsigned int image_id)
 	assert(bl_mem_params);
 
 	switch (image_id) {
+	case BL31_IMAGE_ID:
+		TIME_STAMP();
+		break;
 	case BL33_IMAGE_ID:
+		TIME_STAMP();
 #if ARM_LINUX_KERNEL_AS_BL33
 		/*
 		 * According to the file ``Documentation/arm64/booting.txt`` of
@@ -142,4 +148,10 @@ static int rhea_bl2_handle_post_image_load(unsigned int image_id)
 int bl2_plat_handle_post_image_load(unsigned int image_id)
 {
 	return rhea_bl2_handle_post_image_load(image_id);
+}
+
+int bl2_plat_handle_pre_image_load(unsigned int image_id __unused)
+{
+	TIME_STAMP();
+	return 0;
 }

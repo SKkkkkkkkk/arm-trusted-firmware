@@ -16,6 +16,8 @@
 
 #include <lib/xlat_tables/xlat_tables_v2.h>
 
+#include <time_stamp.h>
+
 /*
  * Placeholder variables for copying the arguments that have been passed to
  * BL3-1 from BL2.
@@ -34,6 +36,7 @@ static entry_point_info_t bl33_image_ep_info;
 void bl31_early_platform_setup2(u_register_t arg0, u_register_t arg1,
 				u_register_t arg2, u_register_t arg3)
 {
+	TIME_STAMP();
 	/* Initialize the console to provide early debug support */
 	console_16550_with_dlf_init();
 

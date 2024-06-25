@@ -5,6 +5,7 @@ ERRATA_A55_1530923 := 1
 PLAT_XLAT_TABLES_DYNAMIC :=	1
 
 PLAT_INCLUDES := \
+-Itools/seehi/time_stamp/inc \
 -Iplat/seehi/rhea/include \
 -Iplat/seehi/rhea/drivers/gpio/dw_apb_gpio/inc \
 -Iplat/seehi/rhea/drivers/spi/dw_apb_ssi/inc \
