@@ -98,8 +98,6 @@ def main():
     parser.add_argument('--fip', metavar="FILENAME", help="The fip file to send (e.g., fip.bin)")
     args = parser.parse_args()
 
-    print(platform.system())
-
     if not args.fwu_sram and not args.fip:
         return
 
