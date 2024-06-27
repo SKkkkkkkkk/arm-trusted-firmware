@@ -73,7 +73,28 @@ plat/seehi/rhea/bl31/plat_bl31_setup.c \
 plat/seehi/rhea/bl31/rhea_pm.c \
 plat/seehi/rhea/bl31/rhea_topology.c
 
-rom.bin: bl1
+.PHONY: rom
+rom: ${BUILD_PLAT}/rom.bin
+${BUILD_PLAT}/rom.bin: ${BUILD_PLAT}/bl1.bin ${NS_BL1U}
 	$(ECHO) "  DD      $@"
-	$(Q)dd if=${BUILD_PLAT}/bl1.bin of=${BUILD_PLAT}/$@ bs=76K conv=sync status=none
-	$(Q)cat ${NS_BL1U} >> ${BUILD_PLAT}/$@
+	$(Q)dd if=${BUILD_PLAT}/bl1.bin of=$@ bs=76K conv=sync status=none
+	$(Q)cat ${NS_BL1U} >> $@
+
+ifeq (${SEEHI_SECUREBOOT},1)
+
+SEEHI_SECUREBOOT_PRIVATE_KEY	:= plat/seehi/rhea/key/ec-secp256k1-private.pem
+RHEA_GEN_SIG_TOOL				?= tools/seehi/gen_signature/generate_ecdsa_signature.py
+
+${BUILD_PLAT}/bl2.bin.sig: ${BUILD_PLAT}/bl2.bin
+	${ECHO} "  SIG     $@"
+	$(Q)${RHEA_GEN_SIG_TOOL} ${SEEHI_SECUREBOOT_PRIVATE_KEY} $< $@
+	
+${BUILD_PLAT}/bl31.bin.sig: ${BUILD_PLAT}/bl31.bin
+	${ECHO} "  SIG    $@"
+	$(Q)${RHEA_GEN_SIG_TOOL} ${SEEHI_SECUREBOOT_PRIVATE_KEY} $< $@
+
+FIP_DEPS += ${BUILD_PLAT}/bl2.bin.sig ${BUILD_PLAT}/bl31.bin.sig
+FIP_ARGS += --blob uuid=cafe086d-4cfe-9846-9b95-2950cbbd5a02,file=${BUILD_PLAT}/bl2.bin.sig
+FIP_ARGS += --blob uuid=cafe086d-4cfe-9846-9b95-2950cbbd5a03,file=${BUILD_PLAT}/bl31.bin.sig
+
+endif
