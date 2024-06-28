@@ -48,6 +48,16 @@ static const io_uuid_spec_t scp_bl2_uuid_spec = {
 };
 #endif
 
+#ifdef SEEHI_SECUREBOOT
+static const io_uuid_spec_t bl2_sig_uuid_spec = {
+	.uuid = UUID_BL2_SIG,
+};
+
+static const io_uuid_spec_t bl31_sig_uuid_spec = {
+	.uuid = UUID_BL31_SIG,
+};
+#endif
+
 static int check_fip(const uintptr_t dev_init_spec, const uintptr_t io_open_spec);
 static int check_backend(const uintptr_t dev_init_spec, const uintptr_t io_open_spec);
 
@@ -89,6 +99,21 @@ static struct plat_io_policy policies[] = {
 		.dev_handle = &fip_dev_handle,
 		.dev_init_spec = (uintptr_t)FIP_IMAGE_ID,
 		.io_open_spec = (uintptr_t)&scp_bl2_uuid_spec,
+		.check = check_fip
+	},
+#endif
+#ifdef SEEHI_SECUREBOOT
+	[BL2_SIG_ID] = {
+		.dev_handle = &fip_dev_handle,
+		.dev_init_spec = (uintptr_t)FIP_IMAGE_ID,
+		.io_open_spec = (uintptr_t)&bl2_sig_uuid_spec,
+		.check = check_fip
+	},
+
+	[BL31_SIG_ID] = {
+		.dev_handle = &fip_dev_handle,
+		.dev_init_spec = (uintptr_t)FIP_IMAGE_ID,
+		.io_open_spec = (uintptr_t)&bl31_sig_uuid_spec,
 		.check = check_fip
 	},
 #endif

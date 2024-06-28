@@ -14,7 +14,6 @@
 #include "memmap.h"
 
 #define PLAT_XLAT_TABLES_DYNAMIC 1
-#define BL1_BL2_MMU_SWITCH 1
 
 #ifdef FIRMWARE_WELCOME_STR
 #	undef FIRMWARE_WELCOME_STR
@@ -214,6 +213,13 @@ MT_DEVICE|MT_RW|MT_SECURE)
 #elif defined(IMAGE_BL2)
 #	define SPI_CLK_DIV		10
 #else
+#endif
+
+#ifdef SEEHI_SECUREBOOT
+#	define BL2_SIG_ID		(MAX_IMAGE_IDS + 1)
+#	define BL31_SIG_ID		(MAX_IMAGE_IDS + 2)
+#	define UUID_BL2_SIG 	{{0x2A, 0x56, 0xF6, 0xC3}, {0x94, 0x7A}, {0x49, 0x08}, 0x9C, 0x9B, {0xD4, 0x9F, 0x9D, 0xAE, 0x05, 0xAB} }
+#	define UUID_BL31_SIG	{{0x44, 0x83, 0x29, 0x4E}, {0xDD, 0x90}, {0x4D, 0x96}, 0x95, 0x05, {0x02, 0xAD, 0x3A, 0xA0, 0x31, 0xEB} }
 #endif
 
 #endif /* PLATFORM_DEF_H */

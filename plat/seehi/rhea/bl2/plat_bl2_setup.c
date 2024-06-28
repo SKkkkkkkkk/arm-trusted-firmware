@@ -27,6 +27,10 @@
 
 #include <time_stamp.h>
 
+#ifdef SEEHI_SECUREBOOT
+#include <seehi_secureboot.h>
+#endif
+
 /* Data structure which holds the extents of the trusted SRAM for BL2 */
 static meminfo_t bl2_tzram_layout __aligned(CACHE_WRITEBACK_GRANULE);
 
@@ -110,6 +114,13 @@ static int rhea_bl2_handle_post_image_load(unsigned int image_id)
 
 	switch (image_id) {
 	case BL31_IMAGE_ID:
+	#ifdef SEEHI_SECUREBOOT
+		/* Verify the signature of BL31 image */
+		if(!seehi_secureboot_verify(BL31_IMAGE_ID, &bl_mem_params->image_info)) {
+			ERROR("BL31 image verification failed\n");
+			err = -1;
+		}
+	#endif
 		TIME_STAMP();
 		break;
 	case BL33_IMAGE_ID:

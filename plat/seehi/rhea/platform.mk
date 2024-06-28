@@ -37,7 +37,6 @@ plat/seehi/rhea/drivers/mmc/dw_mmc/src/dw_mmc.c \
 plat/seehi/rhea/libs/flash/nor/src/nor_flash.c \
 plat/seehi/rhea/libs/flash/nand/src/nand_flash.c
 
-
 BL1_SOURCES +=	\
 lib/cpus/aarch64/aem_generic.S \
 lib/cpus/aarch64/cortex_a55.S
@@ -80,7 +79,9 @@ ${BUILD_PLAT}/rom.bin: ${BUILD_PLAT}/bl1.bin ${NS_BL1U}
 	$(Q)dd if=${BUILD_PLAT}/bl1.bin of=$@ bs=76K conv=sync status=none
 	$(Q)cat ${NS_BL1U} >> $@
 
+SEEHI_SECUREBOOT := 1
 ifeq (${SEEHI_SECUREBOOT},1)
+$(eval $(call add_define,SEEHI_SECUREBOOT))
 
 SEEHI_SECUREBOOT_PRIVATE_KEY	:= plat/seehi/rhea/key/ec-secp256k1-private.pem
 RHEA_GEN_SIG_TOOL				?= tools/seehi/gen_signature/generate_ecdsa_signature.py
@@ -94,7 +95,26 @@ ${BUILD_PLAT}/bl31.bin.sig: ${BUILD_PLAT}/bl31.bin
 	$(Q)${RHEA_GEN_SIG_TOOL} ${SEEHI_SECUREBOOT_PRIVATE_KEY} $< $@
 
 FIP_DEPS += ${BUILD_PLAT}/bl2.bin.sig ${BUILD_PLAT}/bl31.bin.sig
-FIP_ARGS += --blob uuid=cafe086d-4cfe-9846-9b95-2950cbbd5a02,file=${BUILD_PLAT}/bl2.bin.sig
-FIP_ARGS += --blob uuid=cafe086d-4cfe-9846-9b95-2950cbbd5a03,file=${BUILD_PLAT}/bl31.bin.sig
+#define UUID_BL2_SIG 	{{0x2A, 0x56, 0xF6, 0xC3}, {0x94, 0x7A}, {0x49, 0x08}, 0x9C, 0x9B, {0xD4, 0x9F, 0x9D, 0xAE, 0x05, 0xAB} }
+#define UUID_BL31_SIG	{{0x44, 0x83, 0x29, 0x4E}, {0xDD, 0x90}, {0x4D, 0x96}, 0x95, 0x05, {0x02, 0xAD, 0x3A, 0xA0, 0x31, 0xEB} }
+FIP_ARGS += --blob uuid=2a56f6c3-947a-4908-9c9b-d49f9dae05ab,file=${BUILD_PLAT}/bl2.bin.sig
+FIP_ARGS += --blob uuid=4483294e-dd90-4d96-9505-02ad3aa031eb,file=${BUILD_PLAT}/bl31.bin.sig
+
+CIFRA_PATH = plat/seehi/rhea/libs/cifra/src
+CIFRA_SOURCES = $(CIFRA_PATH)/sha256.c \
+				$(CIFRA_PATH)/blockwise.c
+CIFRA_INCLUDES = -I$(CIFRA_PATH) -I$(CIFRA_PATH)/ext
+
+MICROECC_PATH = plat/seehi/rhea/libs/micro-ecc
+MICROECC_SOURCES = $(MICROECC_PATH)/uECC.c
+MICROECC_INCLUDES = -I$(MICROECC_PATH)
+
+PLAT_INCLUDES += ${CIFRA_INCLUDES} ${MICROECC_INCLUDES} \
+-Iplat/seehi/rhea/libs/seehi_secureboot/inc
+
+BL1_SOURCES += ${CIFRA_SOURCES} ${MICROECC_SOURCES} \
+plat/seehi/rhea/libs/seehi_secureboot/src/seehi_secureboot.c
+BL2_SOURCES += ${CIFRA_SOURCES} ${MICROECC_SOURCES} \
+plat/seehi/rhea/libs/seehi_secureboot/src/seehi_secureboot.c
 
 endif

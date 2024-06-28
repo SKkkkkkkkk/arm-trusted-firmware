@@ -23,6 +23,10 @@
 
 #include <time_stamp.h>
 
+#ifdef SEEHI_SECUREBOOT
+#include <seehi_secureboot.h>
+#endif
+
 /* Data structure which holds the extents of the trusted SRAM for BL1*/
 static meminfo_t bl1_tzram_layout;
 static meminfo_t bl2_tzram_layout;
@@ -67,6 +71,14 @@ int bl1_plat_handle_post_image_load(unsigned int image_id)
 	VERBOSE("BL1: BL2 memory layout address = %p\n",
 		(void *)&bl2_tzram_layout);
 
+#ifdef SEEHI_SECUREBOOT
+	/* Verify the signature of BL2 image */
+	if (!seehi_secureboot_verify(BL2_IMAGE_ID, &image_desc->image_info)) {
+		ERROR("BL1: Failed to verify BL2 image\n");
+		return -1;
+	}
+#endif
+
 	TIME_STAMP(); // bl1_load_bl2 end.
 	return 0;
 }
@@ -108,7 +120,6 @@ MT_CODE|MT_SECURE)
 
 void bl1_plat_arch_setup(void)
 {
-#if (BL1_BL2_MMU_SWITCH == 1)
 	const mmap_region_t plat_bl1_region[] = {
 		MAP_BL1_TOTAL,
 		MAP_BL1_RO,
@@ -119,7 +130,6 @@ void bl1_plat_arch_setup(void)
 	mmap_add(plat_bl1_region);
 	init_xlat_tables();
 	enable_mmu_el3(0);
-#endif
 }
 
 void bl1_platform_setup(void)
