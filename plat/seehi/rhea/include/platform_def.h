@@ -11,7 +11,10 @@
 #include <lib/utils_def.h>
 #include <common/tbbr/tbbr_img_def.h>
 #include <plat/common/common_def.h>
-#include "memmap.h"
+#include <memmap.h>
+#ifndef __ASSEMBLER__
+#	include <cru.h>
+#endif
 
 #define PLAT_XLAT_TABLES_DYNAMIC 1
 
@@ -198,7 +201,7 @@ MT_DEVICE|MT_RW|MT_SECURE)
 #define BL33_IMAGE_MAX_SIZE			(1024*1024U)
 
 #define PLAT_UART_BASE				UART0_BASE
-#define PLAT_UART_CLK_IN_HZ			U(25000000)
+#define PLAT_UART_CLK_IN_HZ			get_clk(CLK_UART)
 #define PLAT_CONSOLE_BAUDRATE		U(115200)
 
 #define PLAT_MMC_CLK_IN_HZ          U(100000000)

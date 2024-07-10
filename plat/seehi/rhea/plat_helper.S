@@ -109,10 +109,7 @@ endfunc platform_mem_init
 	 * ---------------------------------------------
 	 */
 func plat_crash_console_init
-	mov_imm x0, PLAT_UART_BASE
-	mov_imm x1, PLAT_UART_CLK_IN_HZ
-	mov_imm x2, PLAT_CONSOLE_BAUDRATE
-	b console_16550_core_init
+	ret
 endfunc plat_crash_console_init
 
 	/* ---------------------------------------------
@@ -123,8 +120,7 @@ endfunc plat_crash_console_init
 	 * ---------------------------------------------
 	 */
 func plat_crash_console_putc
-	mov_imm	x1, PLAT_UART_BASE
-	b console_16550_core_putc
+	ret
 endfunc plat_crash_console_putc
 
 	/* ---------------------------------------------
@@ -136,6 +132,5 @@ endfunc plat_crash_console_putc
 	 * ---------------------------------------------
 	 */
 func plat_crash_console_flush
-	mov_imm	x0, PLAT_UART_BASE
-	b console_16550_core_flush
+	ret
 endfunc plat_crash_console_flush
