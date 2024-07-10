@@ -10,6 +10,7 @@ PLAT_INCLUDES := \
 -Iplat/seehi/rhea/drivers/gpio/dw_apb_gpio/inc \
 -Iplat/seehi/rhea/drivers/spi/dw_apb_ssi/inc \
 -Iplat/seehi/rhea/drivers/mmc/dw_mmc/inc \
+-Iplat/seehi/rhea/drivers/cru/inc \
 -Iplat/seehi/rhea/libs/flash/nor/inc \
 -Iplat/seehi/rhea/libs/flash/nand/inc
 
@@ -34,6 +35,7 @@ plat/seehi/rhea/plat_io_storage.c \
 plat/seehi/rhea/drivers/gpio/dw_apb_gpio/src/dw_apb_gpio.c \
 plat/seehi/rhea/drivers/spi/dw_apb_ssi/src/dw_apb_ssi.c \
 plat/seehi/rhea/drivers/mmc/dw_mmc/src/dw_mmc.c \
+plat/seehi/rhea/drivers/cru/src/cru.c \
 plat/seehi/rhea/libs/flash/nor/src/nor_flash.c \
 plat/seehi/rhea/libs/flash/nand/src/nand_flash.c
 
