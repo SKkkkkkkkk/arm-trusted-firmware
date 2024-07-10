@@ -18,6 +18,7 @@ PLAT_BL_COMMON_SOURCES	:=	\
 drivers/ti/uart/aarch64/16550_console.S \
 drivers/delay_timer/delay_timer.c \
 drivers/delay_timer/generic_delay_timer.c \
+plat/seehi/rhea/drivers/cru/src/cru.c \
 plat/seehi/rhea/plat_helper.S \
 plat/seehi/rhea/plat_rhea_common.c
 
@@ -35,7 +36,6 @@ plat/seehi/rhea/plat_io_storage.c \
 plat/seehi/rhea/drivers/gpio/dw_apb_gpio/src/dw_apb_gpio.c \
 plat/seehi/rhea/drivers/spi/dw_apb_ssi/src/dw_apb_ssi.c \
 plat/seehi/rhea/drivers/mmc/dw_mmc/src/dw_mmc.c \
-plat/seehi/rhea/drivers/cru/src/cru.c \
 plat/seehi/rhea/libs/flash/nor/src/nor_flash.c \
 plat/seehi/rhea/libs/flash/nand/src/nand_flash.c
 
