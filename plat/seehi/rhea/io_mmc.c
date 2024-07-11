@@ -155,7 +155,7 @@ static int mmc_dev_init(io_dev_info_t *dev_info, const uintptr_t init_params __u
 	int i = 0;
 	int j = 0;
 	int ret = 0;
-	unsigned char emmc_card_type[] = { MMC_IS_SD_HC, MMC_IS_EMMC };
+	unsigned char emmc_card_type[] = { MMC_IS_EMMC, MMC_IS_SD_HC };
 	unsigned char emmc_bus_width[] = { MMC_BUS_WIDTH_8, MMC_BUS_WIDTH_4, MMC_BUS_WIDTH_1 };
 
 	if (current_state.inited != 0) {
@@ -174,8 +174,8 @@ static int mmc_dev_init(io_dev_info_t *dev_info, const uintptr_t init_params __u
 		params.reg_base = EMMC4_5_BASE;
 		params.max_clk = 40000000;
 
-		for (i = 0; i < sizeof(emmc_bus_width) / sizeof(emmc_bus_width[0]); i++) {
-			for (j = 0; j < sizeof(emmc_card_type) / sizeof(emmc_card_type[0]); j++) {
+		for (j = 0; j < sizeof(emmc_card_type) / sizeof(emmc_card_type[0]); j++) {
+			for (i = 0; i < sizeof(emmc_bus_width) / sizeof(emmc_bus_width[0]); i++) {
 				if ((emmc_bus_width[i] == MMC_BUS_WIDTH_8) &&
 					(emmc_card_type[j] != MMC_IS_EMMC)) {
 					continue;
