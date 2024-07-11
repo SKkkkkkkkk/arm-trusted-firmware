@@ -38,12 +38,16 @@ static meminfo_t bl2_tzram_layout __aligned(CACHE_WRITEBACK_GRANULE);
 void bl2_early_platform_setup2(u_register_t arg0, u_register_t arg1,
 			       u_register_t arg2, u_register_t arg3)
 {
+	int ret = 0;
+
 	meminfo_t *mem_layout = (void *)arg1;
 
 	/* Initialize the console to provide early debug support */
 	console_16550_with_dlf_init();
 
-	rhea_pcie_ep_init(); //need bl2 first init
+	ret = rhea_pcie_ep_init(); //need bl2 first init
+	if(ret != 0)
+		ERROR("BL2 rhea_pcie_ep_init failed\n");
 
 	/* Setup the BL2 memory layout */
 	bl2_tzram_layout = *mem_layout;
