@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <chip.h>
 // #include "gicv3.h"
 #include "pcie_ep.h"
 // #include "systimer.h"
@@ -626,12 +627,17 @@ struct HAL_PCIE_HANDLE s_pcie;
 
 int rhea_pcie_ep_init()
 {
+
 	uint32_t result = HAL_ERROR;
 	struct HAL_PCIE_HANDLE *pcie = &s_pcie;
 
 	s_pcie.dev = &g_pcieDevX8;
 
-	result = PCIe_EP_Init(pcie);
+	if(IS_ASIC == 1){
+		result = PCIe_EP_Init(pcie);
+	}else{
+		return 0;
+	}
 
 	return result;
 }
