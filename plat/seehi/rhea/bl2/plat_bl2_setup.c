@@ -42,6 +42,8 @@ void bl2_early_platform_setup2(u_register_t arg0, u_register_t arg1,
 	/* Initialize the console to provide early debug support */
 	console_16550_with_dlf_init();
 
+	// rhea_pcie_ep_init(); //need bl2 first init
+
 	/* Setup the BL2 memory layout */
 	bl2_tzram_layout = *mem_layout;
 

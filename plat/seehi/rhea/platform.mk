@@ -11,6 +11,7 @@ PLAT_INCLUDES := \
 -Iplat/seehi/rhea/drivers/spi/dw_apb_ssi/inc \
 -Iplat/seehi/rhea/drivers/mmc/dw_mmc/inc \
 -Iplat/seehi/rhea/drivers/cru/inc \
+-Iplat/seehi/rhea/drivers/pcie_ep/inc \
 -Iplat/seehi/rhea/libs/flash/nor/inc \
 -Iplat/seehi/rhea/libs/flash/nand/inc
 
@@ -53,6 +54,8 @@ ${BL1_BL2_COMMON_SOURCES} \
 common/desc_image_load.c \
 plat/seehi/rhea/bl2/plat_bl2_setup.c \
 plat/seehi/rhea/bl2/rhea_bl2_mem_params_desc.c \
+plat/seehi/rhea/drivers/pcie_ep/src/pcie_ep.c \
+plat/seehi/rhea/bl2/rhea_pcie_ep.c \
 plat/seehi/rhea/bl2/rhea_image_load.c
 
 # Include GICv3 driver files
