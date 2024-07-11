@@ -5,7 +5,7 @@
 #include "pcie_ep.h"
 
 /** @defgroup PCIE_How_To_Use How To Use
- *  @{
+ *
 
  Thi PCIe drvier is code for dwc pcie controller driver.
 
@@ -24,10 +24,10 @@
  - Setting iATU by calling HAL_PCIE_InboundConfig() and HAL_PCIE_OutboundConfig()
  - Setting outbound iATU for CFG by calling HAL_PCIE_OutboundConfigCFG0()
 
- @} */
+*/
 
 /** @defgroup PCIE_Private_Definition Private Definition
- *  @{
+ *
  */
 /********************* Private MACRO Definition ******************************/
 
@@ -181,10 +181,9 @@ static int32_t HAL_PCIE_GetFreeOutboundAtu(struct HAL_PCIE_HANDLE *pcie)
 }
 
 #if 0
-/** @} */
 /********************* Public Function Definition ****************************/
 /** @defgroup PCIE_Exported_Functions_Group2 State and Errors Functions
- *  @{
+ *
  */
 
 /**
@@ -232,13 +231,11 @@ int HAL_PCIE_GetDmaStatus(struct HAL_PCIE_HANDLE *pcie, uint8_t chn, enum HAL_PC
 	return ret;
 }
 
-/** @} */
-
 /** @defgroup PCIE_Exported_Functions_Group3 IO Functions
 
   This section provides functions allowing to IO controlling:
 
- *  @{
+ *
  */
 
 /**
@@ -322,10 +319,8 @@ uint32_t HAL_PCIE_GetLTSSM(struct HAL_PCIE_HANDLE *pcie)
 	return HAL_PCIE_ApbReadl(pcie, PCIE_CLIENT_LTSSM_STATUS);
 }
 
-/** @} */
-
 /** @defgroup PCIE_Exported_Functions_Group4 Init and DeInit Functions
- *  @{
+ *
  */
 
 /**
@@ -351,10 +346,9 @@ HAL_Status HAL_PCIE_DeInit(struct HAL_PCIE_HANDLE *pcie)
 	return HAL_OK;
 }
 
-/** @} */
 
 /** @defgroup PCIe_Exported_Functions_Group5 Other Functions
- *  @{
+ *
  */
 
 /**

@@ -6,7 +6,6 @@
 
 /***************************** MACRO Definition ******************************/
 /** @defgroup PCIE_Exported_Definition_Group1 Basic Definition
- *  @{
  */
 
 /***************************** Structure Definition **************************/
@@ -106,10 +105,8 @@ struct HAL_PCIE_DEV {
 struct HAL_PCIE_HANDLE {
 	struct HAL_PCIE_DEV *dev;
 };
-/** @} */
 /***************************** Function Declare ******************************/
 /** @defgroup PCIE_Public_Function_Declare Public Function Declare
- *  @{
  */
 
 // int HAL_PCIE_GetDmaStatus(struct HAL_PCIE_HANDLE *pcie, uint8_t chn, enum HAL_PCIE_DMA_DIR dir);
