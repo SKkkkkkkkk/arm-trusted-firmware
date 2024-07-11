@@ -212,7 +212,7 @@ MT_DEVICE|MT_RW|MT_SECURE)
 #define GICR_BASE	(GIC600_BASE + ((4 + (2 * ITScount)) << 16))
 
 #if defined(IMAGE_BL1)
-#	define SPI_CLK_DIV		30
+#	define SPI_CLK_DIV		10
 #elif defined(IMAGE_BL2)
 #	define SPI_CLK_DIV		10
 #else
