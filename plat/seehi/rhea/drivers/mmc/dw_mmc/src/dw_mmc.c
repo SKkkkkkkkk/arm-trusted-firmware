@@ -211,17 +211,10 @@ static void dw_init(void)
 
 	base = dw_params.reg_base;
 
-	/* card poweroff poweron */
-	if (dw_params.mmc_dev_type != MMC_IS_EMMC) {
-		mmio_write_32(base + DWMMC_PWREN, 0x0);
-		udelay(2000);
-		mmio_write_32(base + DWMMC_PWREN, 0x1);
-	}
-
 	/* card reset*/
 	data = mmio_read_32(base + DWMMC_RST_N);
 	mmio_write_32(base + DWMMC_RST_N, data & 0xfffffffe);
-	udelay(400);
+	udelay(200);
 	data = mmio_read_32(base + DWMMC_RST_N);
 	mmio_write_32(base + DWMMC_RST_N, data | 0x1);
 

@@ -141,7 +141,6 @@ void mmc_iomux_set_default(void)
 	pinmux_select(PORTA, 7, 7); // d5
 	pinmux_select(PORTA, 8, 7); // d6
 	pinmux_select(PORTA, 9, 7); // d7
-	pinmux_select(PORTA, 26, 7); // pwen
 	pinmux_select(PORTA, 25, 7); // rstn
 }
 
@@ -197,7 +196,6 @@ static int mmc_dev_init(io_dev_info_t *dev_info, const uintptr_t init_params __u
 					pinmux_select(PORTA, 5, 0); // d3
 				}
 				pinmux_select(PORTA, 2, 0); // d0
-				pinmux_select(PORTA, 26, 0); // pwen
 				pinmux_select(PORTA, 25, 0); // rstn
 
 				params.bus_width = emmc_bus_width[i];
