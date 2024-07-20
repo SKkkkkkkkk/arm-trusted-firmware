@@ -43,9 +43,8 @@ void bl2_early_platform_setup2(u_register_t arg0, u_register_t arg1,
 
 	meminfo_t *mem_layout = (void *)arg1;
 
-	if (IS_ASIC == 1) {
+	if (IS_ASIC == 1)
 		set_clk();
-	}
 
 	/* Initialize the console to provide early debug support */
 	console_16550_with_dlf_init();
