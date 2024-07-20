@@ -106,16 +106,16 @@
  * and secure DRAM.
  */
 #define ROM_BASE A55_BOOTROM_BASE
-#define ROM_SIZE UL(0x00040000) //256KB
+#define ROM_SIZE UL(0x00040000) //256KiB
 
 #define SRAM_BASE APRAM_BASE
-#define SRAM_SIZE UL(0x00080000) //512KB
+#define SRAM_SIZE UL(0x00080000) //512KiB
 
 #define DDR_BASE AP_DRAM_BASE
 #define DDR_SIZE UL(0xC0000000) //3G
 
 #define FLASH_MAP_BASE BOOTFLASH_BASE
-#define FLASH_MAP_SIZE UL(0x01000000) //24bit, 16MB
+#define FLASH_MAP_SIZE UL(0x01000000) //24bit, 16MiB
 
 #define DEVICE_START_BASE				UART0_BASE
 #define DEVICE_END_BASE					round_up(IOMUX_CFG_BASE + 4096, PAGE_SIZE)
@@ -133,12 +133,14 @@
 #define PLAT_RHEA_HOLD_STATE_WAIT		 0
 #define PLAT_RHEA_HOLD_STATE_GO		 	 1
 
-// TF_A_TOTAL_RAM = BL_RAM_SIZE+SHARED_RAM_SIZE = 512KB
+// TF_A_TOTAL_RAM = BL_RAM_SIZE+SHARED_RAM_SIZE = 512KiB
 #define TF_A_TOTAL_RAM_SIZE		(SRAM_SIZE)
-#define SHARED_RAM_SIZE			U(0x1000) // 4KB
-#define BL_RAM_SIZE				(TF_A_TOTAL_RAM_SIZE - SHARED_RAM_SIZE)
+#define SHARED_RAM_SIZE			U(0x1000) // 4KiB
+#define RESERVED_RAM_BASE		(SHARED_RAM_BASE + SHARED_RAM_SIZE)
+#define RESERVED_RAM_SIZE		U(0x1F000) // 124KiB
+#define BL_RAM_SIZE				(TF_A_TOTAL_RAM_SIZE - SHARED_RAM_SIZE - RESERVED_RAM_SIZE)
 
-#define BL_RAM_BASE			(SHARED_RAM_BASE + SHARED_RAM_SIZE)
+#define BL_RAM_BASE			(SHARED_RAM_BASE + SHARED_RAM_SIZE + RESERVED_RAM_SIZE)
 #define BL_RAM_LIMIT		(BL_RAM_BASE + BL_RAM_SIZE)
 
 /*
@@ -154,7 +156,7 @@
 #define NS_BL1U_BASE 		BL1_RO_LIMIT  // NS_BL1U
 
 
-#define BL1_RW_BASE			(BL1_RW_LIMIT - (44*1024))
+#define BL1_RW_BASE			(BL1_RW_LIMIT - (32*1024) - (32*1024))
 #define BL1_RW_LIMIT		(BL_RAM_LIMIT)
 
 /*
@@ -163,7 +165,7 @@
  * Put BL3-1 at the top of the Trusted SRAM. BL31_BASE is calculated using the
  * current BL3-1 debug size plus a little space for growth.
  */
-#define BL31_BASE				(BL31_PROGBITS_LIMIT - (44*1024))
+#define BL31_BASE				(BL31_PROGBITS_LIMIT - (52*1024) - (32*1024))
 #define BL31_PROGBITS_LIMIT		(BL1_RW_BASE)
 #define BL31_LIMIT				(BL_RAM_LIMIT)
 
@@ -173,12 +175,12 @@
  * Put BL2 just below BL3-1. BL2_BASE is calculated using the current BL2 debug
  * size plus a little space for growth.
  */
-#define BL2_BASE			(BL31_BASE - (120*1024)) // DDR driver consumed 20KB RAM; mmc driver consumed 24KB RAM
+#define BL2_BASE			(BL31_BASE - (140*1024) - (96*1024))
 #define BL2_LIMIT			(BL31_BASE)
 
 #ifdef NEED_SCP_BL2
 #	define SCP_BL2_BASE				(0x79600000)
-#	define SCP_BL2_LIMIT			(_1MB + SCP_BL2_BASE)
+#	define SCP_BL2_LIMIT			(_1MiB + SCP_BL2_BASE)
 #endif
 
 /* Special value used to verify platform parameters from BL2 to BL31 */

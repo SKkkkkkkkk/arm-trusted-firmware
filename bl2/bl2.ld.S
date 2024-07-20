@@ -22,6 +22,10 @@ SECTIONS {
 
     ASSERT(. == ALIGN(PAGE_SIZE),
         "BL2_BASE address is not aligned on a page boundary.")
+#ifdef PLAT_rhea
+    ASSERT(. >= BL_RAM_BASE,
+        "BL2_BASE address is using RESERVED_RAM.")
+#endif
 
 #if SEPARATE_CODE_AND_RODATA
     .text . : {
