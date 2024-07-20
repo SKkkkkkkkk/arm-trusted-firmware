@@ -21,10 +21,20 @@
 import argparse
 import subprocess
 import os
+import textwrap
 
 def main():
     # parse command line arguments
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+    description="Build script for Rhea TF-A.",
+    formatter_class=argparse.RawTextHelpFormatter,
+    epilog=textwrap.dedent("""\
+        others:
+            if aarch64-none-elf- is not in your PATH, you can specify the cross-compile toolchain by setting CROSS_COMPILE environment variable.
+            like this:
+                CROSS_COMPILE=/path/to/aarch64-none-elf- ./build.py
+    """)
+    )
     parser.add_argument('-v', '--verbose', action='store_true')
     parser.add_argument('-c', '--clean', action='store_true')
     parser.add_argument('-d', '--debug', action='store_true', help="build debug version, default is release.")
