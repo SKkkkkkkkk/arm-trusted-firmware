@@ -40,3 +40,10 @@ unsigned int get_clk(ClkDev clk_dev)
     d_freq = fpga_clock[clk_dev] * 1000000;
     return d_freq;
 }
+
+void set_clk()
+{
+    static volatile char cru_data[8*1024];
+    cru_data[0] = 1;
+    (void)cru_data[0];
+}

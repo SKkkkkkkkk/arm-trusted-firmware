@@ -11,6 +11,7 @@
 #include <plat/common/platform.h>
 #include <plat_common.h>
 #include <platform_def.h>
+#include <chip.h>
 
 #include <arch_helpers.h>
 #include <common/bl_common.h>
@@ -41,6 +42,10 @@ void bl2_early_platform_setup2(u_register_t arg0, u_register_t arg1,
 	int ret = 0;
 
 	meminfo_t *mem_layout = (void *)arg1;
+
+	if (IS_ASIC == 1) {
+		set_clk();
+	}
 
 	/* Initialize the console to provide early debug support */
 	console_16550_with_dlf_init();

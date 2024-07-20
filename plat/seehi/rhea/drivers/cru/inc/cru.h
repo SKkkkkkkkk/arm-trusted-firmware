@@ -34,5 +34,6 @@ typedef enum {
 } ClkDev;
 
 unsigned int get_clk(ClkDev clk_dev);
+void set_clk();
 
 #endif // __CRU_H__
