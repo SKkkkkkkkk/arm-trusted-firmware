@@ -40,7 +40,7 @@ def main():
     # build options
 
     ## common
-    make = ["make", "PLAT=rhea", "HW_ASSISTED_COHERENCY=1", "USE_COHERENT_MEM=0", "ENABLE_LTO=1", "-j"]
+    make = ["make", "PLAT=rhea", "HW_ASSISTED_COHERENCY=1", "USE_COHERENT_MEM=0", "ENABLE_LTO=0", "-j"]
     
     ## OPENSSL_DIR
     openssl_dir = os.environ.get('OPENSSL_DIR')
