@@ -204,7 +204,7 @@ static int emmc_io_setup(void* arg __unused)
 	return io_result;
 }
 
-static int spi_flash_io_setup(void* arg)
+static int spi_flash_io_setup(void* arg __unused)
 {
 	int io_result;
 
