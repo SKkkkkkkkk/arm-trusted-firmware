@@ -143,7 +143,7 @@ func console_16550_core_putc
 	ASM_ASSERT(ne)
 #endif /* ENABLE_ASSERTIONS */
 #ifdef PLAT_rhea
-	mov_imm x3, SYSCTRL_CFG_BASE
+	mov_imm x3, SYSCTRL_BASE
 #endif
 	/* Prepend '\r' to '\n' */
 	cmp	w0, #0xA

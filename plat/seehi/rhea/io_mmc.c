@@ -165,12 +165,12 @@ static int mmc_dev_init(io_dev_info_t *dev_info, const uintptr_t init_params __u
 
 	if (dev_spec->idx == FIP_BACKEND_EMMC) {
 		memset(&params, 0, sizeof(dw_mmc_params_t));
-		params.reg_base = EMMC4_5_BASE;
+		params.reg_base = EMMC_BASE;
 		params.desc_base = (unsigned long int)dma_desc;
 		params.desc_size = sizeof(dma_desc);
 		params.clk_rate = PLAT_MMC_CLK_IN_HZ;
 		params.flags = 0;
-		params.reg_base = EMMC4_5_BASE;
+		params.reg_base = EMMC_BASE;
 		params.max_clk = 40000000;
 
 		for (j = 0; j < sizeof(emmc_card_type) / sizeof(emmc_card_type[0]); j++) {

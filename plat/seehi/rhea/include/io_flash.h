@@ -31,7 +31,7 @@ int register_io_dev_flash(const struct io_dev_connector **dev_con);
 
 static inline bool is_boot_from_flash()
 {
-	return (*(volatile uint32_t*)(SYSCTRL_CFG_BASE + 0xC04)) & 1;
+	return (*(volatile uint32_t*)(SYSCTRL_BASE + 0xC04)) & 1;
 }
 
 #endif /* IO_MEMMAP_H */
