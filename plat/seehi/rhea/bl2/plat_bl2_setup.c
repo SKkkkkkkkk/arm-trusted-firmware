@@ -28,6 +28,7 @@
 #include <lib/xlat_tables/xlat_tables_v2.h>
 
 #include <time_stamp.h>
+#include "dram.h"
 
 #ifdef SEEHI_SECUREBOOT
 #include <seehi_secureboot.h>
@@ -55,6 +56,8 @@ void bl2_early_platform_setup2(u_register_t arg0, u_register_t arg1,
 
 	/* Setup the BL2 memory layout */
 	bl2_tzram_layout = *mem_layout;
+
+	dram_init();
 
 	generic_delay_timer_init();
 }

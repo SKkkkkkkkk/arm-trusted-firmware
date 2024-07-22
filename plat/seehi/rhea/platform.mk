@@ -13,7 +13,8 @@ PLAT_INCLUDES := \
 -Iplat/seehi/rhea/drivers/cru/inc \
 -Iplat/seehi/rhea/drivers/pcie_ep/inc \
 -Iplat/seehi/rhea/libs/flash/nor/inc \
--Iplat/seehi/rhea/libs/flash/nand/inc
+-Iplat/seehi/rhea/libs/flash/nand/inc \
+-Iplat/seehi/rhea/drivers/dram/inc
 
 PLAT_BL_COMMON_SOURCES	:=	\
 drivers/ti/uart/aarch64/16550_console.S \
@@ -56,6 +57,7 @@ plat/seehi/rhea/bl2/plat_bl2_setup.c \
 plat/seehi/rhea/bl2/rhea_bl2_mem_params_desc.c \
 plat/seehi/rhea/drivers/pcie_ep/src/pcie_ep.c \
 plat/seehi/rhea/drivers/pcie_ep/src/rhea_pcie_ep.c \
+plat/seehi/rhea/drivers/dram/src/dram.c \
 plat/seehi/rhea/bl2/rhea_image_load.c
 
 # Include GICv3 driver files
