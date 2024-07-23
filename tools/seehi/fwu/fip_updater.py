@@ -102,7 +102,12 @@ def main():
         return
 
     serial_port = args.serial_port
-    fwu_sram = args.fwu_sram if args.fwu_sram else "fwu_sram.default"
+    
+    # Get the directory where this script is located
+    script_dir = os.path.dirname(os.path.realpath(__file__))
+
+    # Use the default fwu_sram file located in the script directory
+    fwu_sram = args.fwu_sram if args.fwu_sram else os.path.join(script_dir, "fwu_sram.default")
     fip = args.fip
 
     # Step 1: Identify processes using the serial port

@@ -11,11 +11,14 @@ DEVICE=$1
 FIP_FILE=$2
 CYCLE_COUNT=$3
 
+# Get the directory where the script is located
+SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
+
 # Perform the FWU flow in a loop
 for ((i=1; i<=CYCLE_COUNT; i++))
 do
     echo "Starting FWU cycle $i..."
-    python3 fip_updater.py -p $DEVICE --fip $FIP_FILE
+    "$SCRIPT_DIR/fip_updater.py" -p $DEVICE --fip $FIP_FILE
     if [ $? -ne 0 ]; then
         echo "FWU cycle $i failed."
         exit 1

@@ -62,3 +62,4 @@ gdb*
 *.log
 .DS_Store
 *.bin
+release/
