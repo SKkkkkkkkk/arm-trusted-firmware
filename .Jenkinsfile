@@ -17,7 +17,7 @@ pipeline {
 
     environment {
         /* Build config */
-        BIUILD_COMPILER = "/sw/tools/arm-gnu-toolchain-13.2.Rel1-x86_64-aarch64-none-elf/bin/aarch64-none-elf-gcc"
+        BIUILD_COMPILER = "/sw/tools/arm-gnu-toolchain-13.2.Rel1-x86_64-aarch64-none-elf/bin/aarch64-none-elf-"
         BL33_TARGET = "/sw/tools/tf-a_depend/u-boot.bin"
         NS_BL1U_TARGET = "/sw/tools/tf-a_depend/ns_bl1u.bin"
         /* Build info */
@@ -54,10 +54,10 @@ pipeline {
                 script {
                     /* Compile the project and ignore standard output */
                     sh(script:
-                        "CROSS_COMPILE=${BIUILD_COMPILER}" +
-                        "./build.py" +
-                        "--bl33 ${BL33_TARGET}" +
-                        "--ns_bl1u ${NS_BL1U_TARGET}" +
+                        "CROSS_COMPILE=${BIUILD_COMPILER} " +
+                        "./build.py " +
+                        "--bl33 ${BL33_TARGET} " +
+                        "--ns_bl1u ${NS_BL1U_TARGET} " +
                         "> /dev/null"
                     )
                 }
@@ -68,6 +68,7 @@ pipeline {
                 echo "upload binaries"
                 script {
                     if (fileExists(OUTPUT_PATH)) {
+                        def fileList = []
                         def files = findFiles(glob: UPLOAD_TARGET)
                         for (file in files) {
                             def path = sh(
