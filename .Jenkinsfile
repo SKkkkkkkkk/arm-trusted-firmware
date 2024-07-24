@@ -37,7 +37,9 @@ pipeline {
         JFROG_REPO_PATH =   "_0002-a510-g124/sw/repo/" +
                             "${GIT_REPO_OWNER}/" +
                             "${GIT_REPO_NAME}/" +
-                            "${BRANCH_NAME}/"
+                            "${BRANCH_NAME}/" +
+                            "${GIT_COMMIT_ID}" +
+                            "${ GIT_BUILD_TAG ? "_${GIT_BUILD_TAG}/" : "/" }"
         JFROG_FILE_PROPS =  "repo=${GIT_REPO_NAME};" +
                             "branch=${BRANCH_NAME};" +
                             "commit=${GIT_COMMIT_ID};" +
