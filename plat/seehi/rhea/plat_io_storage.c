@@ -58,6 +58,12 @@ static const io_uuid_spec_t bl31_sig_uuid_spec = {
 };
 #endif
 
+#ifdef NEED_BL31_1
+static const io_uuid_spec_t bl31_1_uuid_spec = {
+	.uuid = UUID_BL31_1,
+};
+#endif
+
 static int check_fip(const uintptr_t dev_init_spec, const uintptr_t io_open_spec);
 static int check_backend(const uintptr_t dev_init_spec, const uintptr_t io_open_spec);
 
@@ -114,6 +120,14 @@ static struct plat_io_policy policies[] = {
 		.dev_handle = &fip_dev_handle,
 		.dev_init_spec = (uintptr_t)FIP_IMAGE_ID,
 		.io_open_spec = (uintptr_t)&bl31_sig_uuid_spec,
+		.check = check_fip
+	},
+#endif
+#ifdef NEED_BL31_1
+	[BL31_1_IMAGE_ID] = {
+		.dev_handle = &fip_dev_handle,
+		.dev_init_spec = (uintptr_t)FIP_IMAGE_ID,
+		.io_open_spec = (uintptr_t)&bl31_1_uuid_spec,
 		.check = check_fip
 	},
 #endif

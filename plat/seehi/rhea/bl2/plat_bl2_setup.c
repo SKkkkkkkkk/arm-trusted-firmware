@@ -82,6 +82,13 @@ BL33_IMAGE_OFFSET,			\
 BL33_IMAGE_MAX_SIZE,			\
 MT_MEMORY|MT_RW|MT_NS)
 
+#ifdef NEED_BL31_1
+#define MAP_BL31_1 MAP_REGION_FLAT( \
+BL31_1_IMAGE_BASE, \
+BL31_1_IMAGE_LIMIT-BL31_1_IMAGE_BASE, \
+MT_NON_CACHEABLE|MT_RW|MT_SECURE)
+#endif
+
 void bl2_plat_arch_setup(void)
 {
 	const mmap_region_t plat_bl2_region[] = {
@@ -90,6 +97,9 @@ void bl2_plat_arch_setup(void)
 		MAP_BL33,
 		MAP_DEVICE,
 		MAP_SHARED_RAM,
+	#ifdef NEED_BL31_1
+		MAP_BL31_1,
+	#endif
 		{0}
 	};
 	mmap_add(plat_bl2_region);
@@ -127,6 +137,21 @@ static int rhea_bl2_handle_post_image_load(unsigned int image_id)
 	assert(bl_mem_params);
 
 	switch (image_id) {
+#ifdef NEED_BL31_1
+	case BL31_1_IMAGE_ID:
+		TIME_STAMP();
+		uint32_t bl31_1_base = (uint32_t)bl_mem_params->image_info.image_base;
+		ERROR("BL2: This routine is a workaround for dram problem.\n");
+		ERROR("BL2: About to wake up Core3 to run BL31_1.\n");
+		ERROR("BL2: BL31_1_BASE = 0x%x\n", bl31_1_base);
+		*(volatile uint64_t*)PLAT_RHEA_TRUSTED_MAILBOX_BASE = bl31_1_base;
+		uint64_t *hold_base = (uint64_t *)PLAT_RHEA_HOLD_BASE;
+		hold_base[3] = PLAT_RHEA_HOLD_STATE_GO;
+		dsbsy();
+		sev();
+		while(1) asm volatile("wfe");
+		break;
+#endif
 	case BL31_IMAGE_ID:
 	#ifdef SEEHI_SECUREBOOT
 		/* Verify the signature of BL31 image */

@@ -41,6 +41,7 @@ def main():
     parser.add_argument('--log_level', metavar="LOG_LEVEL", type=int, help="0:None, 10:Error, 20:Notice, 30:Warning, 40: Info, 50: Verbose, 40 for debug, 10 for release by default.")
     parser.add_argument('--bl33',   metavar="FILENAME", help="add a bl33 image to fip.")
     parser.add_argument('--ns_bl1u', metavar="FILENAME", help="generate rom.bin consisted of bl1 and ns_bl1u.")
+    parser.add_argument('--bl31_1', metavar="FILENAME", help="add a bl31_1 image to fip.")
     args = parser.parse_args()
 
     # cross compile
@@ -80,6 +81,12 @@ def main():
     ## bl33
     if args.bl33 is not None:
         make.append("BL33=" + args.bl33)
+    
+    ## bl31_1
+    if args.bl31_1 is not None:
+        make.append("BL31_1=" + args.bl31_1)
+
+    if args.bl31_1 is not None or args.bl33 is not None:
         make.append("fip")
     
     ## ns_bl1u

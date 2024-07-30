@@ -18,6 +18,21 @@
  * the next executable image id.
  ******************************************************************************/
 static bl_mem_params_node_t bl2_mem_params_descs[] = {
+#ifdef NEED_BL31_1
+    {
+	    .image_id = BL31_1_IMAGE_ID,
+
+	    SET_STATIC_PARAM_HEAD(ep_info, PARAM_IMAGE_BINARY,
+		    VERSION_2, entry_point_info_t, SECURE | NON_EXECUTABLE),
+
+	    SET_STATIC_PARAM_HEAD(image_info, PARAM_IMAGE_BINARY,
+		    VERSION_2, image_info_t, 0),
+	    .image_info.image_base = BL31_1_IMAGE_BASE,
+	    .image_info.image_max_size = BL31_1_IMAGE_LIMIT - BL31_1_IMAGE_BASE,
+
+	    .next_handoff_image_id = INVALID_IMAGE_ID,
+    },
+#endif
 	/* Fill BL31 related information */
 	{ .image_id = BL31_IMAGE_ID,
 

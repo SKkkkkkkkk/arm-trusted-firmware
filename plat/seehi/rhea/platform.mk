@@ -79,6 +79,12 @@ plat/seehi/rhea/bl31/plat_bl31_setup.c \
 plat/seehi/rhea/bl31/rhea_pm.c \
 plat/seehi/rhea/bl31/rhea_topology.c
 
+ifeq (${BL33},)
+override NEED_BL33	:=	no
+else
+override NEED_BL33	:=	yes
+endif
+
 .PHONY: rom
 rom: ${BUILD_PLAT}/rom.bin
 ${BUILD_PLAT}/rom.bin: ${BUILD_PLAT}/bl1.bin ${NS_BL1U}
@@ -124,4 +130,10 @@ plat/seehi/rhea/libs/seehi_secureboot/src/seehi_secureboot.c
 BL2_SOURCES += ${CIFRA_SOURCES} ${MICROECC_SOURCES} \
 plat/seehi/rhea/libs/seehi_secureboot/src/seehi_secureboot.c
 
+endif
+
+ifneq (${BL31_1},)
+$(eval $(call add_define,NEED_BL31_1))
+FIP_DEPS += ${BL31_1}
+FIP_ARGS += --blob uuid=ac594b3e-f394-437b-b832-3bf780fcefdf,file=${BL31_1}
 endif
