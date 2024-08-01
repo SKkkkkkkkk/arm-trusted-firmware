@@ -55,7 +55,7 @@ ${BL1_BL2_COMMON_SOURCES} \
 common/desc_image_load.c \
 plat/seehi/rhea/bl2/plat_bl2_setup.c \
 plat/seehi/rhea/bl2/rhea_bl2_mem_params_desc.c \
-plat/seehi/rhea/drivers/pcie_ep/src/pcie_ep.c \
+plat/seehi/rhea/drivers/pcie_ep/src/pcie.c \
 plat/seehi/rhea/drivers/pcie_ep/src/rhea_pcie_ep.c \
 plat/seehi/rhea/drivers/dram/src/dram.c \
 plat/seehi/rhea/bl2/rhea_image_load.c

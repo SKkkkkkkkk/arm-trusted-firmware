@@ -21,7 +21,7 @@
 #include <drivers/console.h>
 #include <drivers/ti/uart/uart_16550.h>
 #include <drivers/generic_delay_timer.h>
-#include <pcie_ep.h>
+#include <pcie.h>
 
 #include <lib/utils.h>
 #include <lib/mmio.h>
