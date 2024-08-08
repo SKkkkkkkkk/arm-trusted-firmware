@@ -121,7 +121,7 @@ struct PCIE_IDB_CFG {
 /********************* Private Function Definition ***************************/
 
 #if  SEEHI_PLD_PCIE_TEST
-void mc_init(uint64_t addr, uint8_t layer) {
+static void mc_init(uint64_t addr, uint8_t layer) {
 	// global
 	if (layer == 4) {
 		REG32(addr+0x00013054) = 0x00000000;
