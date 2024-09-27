@@ -56,10 +56,7 @@ venv/
 compile_commands.json
 .vscode/
 poetry.lock
+.DS_Store
 *drawio.bkp
 *drawio.dtmp
-gdb*
 *.log
-.DS_Store
-*.bin
-release/
