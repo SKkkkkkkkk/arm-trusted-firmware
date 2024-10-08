@@ -81,6 +81,7 @@
 #define FIFOTH_RWMARK_SHIFT (16)
 #define FIFOTH_RWMARK_MASK (0x7ff << FIFOTH_RWMARK_SHIFT)
 #define FIFOTH_RWMARK(x) (((x) & 0x7ff) << FIFOTH_RWMARK_SHIFT)
+#define FIFOTH_DMA_BURST_MASK (0x7 << 28)
 #define FIFOTH_DMA_BURST_SIZE(x) (((x) & 0x7) << 28)
 
 #define DWMMC_DEBNCE (0x64)
@@ -238,9 +239,8 @@ static void dw_init(void)
 	mmio_write_32(base + DWMMC_DEBNCE, 0x00ffffff);
 	mmio_write_32(base + DWMMC_BMOD, BMOD_SWRESET);
 	data = mmio_read_32(base + DWMMC_FIFOTH);
-	data = ((data & FIFOTH_RWMARK_MASK) >> FIFOTH_RWMARK_SHIFT) + 1;
-	data = FIFOTH_DMA_BURST_SIZE(0) | FIFOTH_RWMARK(data / 2 - 1) |
-				FIFOTH_TWMARK(data / 2);
+	data &= ~FIFOTH_DMA_BURST_MASK;
+	data |= FIFOTH_DMA_BURST_SIZE(0);
 	mmio_write_32(base + DWMMC_FIFOTH, data);
 	do {
 		data = mmio_read_32(base + DWMMC_BMOD);
