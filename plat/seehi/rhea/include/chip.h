@@ -25,6 +25,14 @@ static inline void system_reset(void)
 {
 	REG32(SYSCTRL_BASE + 0x404) = 	0x1; // Software Reset Enable For Full Chip and WDT
 	REG32(SYSCTRL_BASE + 0x400)   = 0x0; // Software Reset
+	while(1) __asm__ __volatile__("");
+	UNREACHABLE();
+}
+
+static inline void wait_fpga_ddr_calibration_done(void)
+{
+	if(IS_ASIC) return;
+	while((REG32(SYSCTRL_BASE + 0xFDC) & 0x1) == 0);
 }
 
 #ifdef __cplusplus

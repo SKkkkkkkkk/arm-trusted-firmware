@@ -28,7 +28,7 @@
 #include <lib/xlat_tables/xlat_tables_v2.h>
 
 #include <time_stamp.h>
-#include "dram.h"
+#include <dram.h>
 
 #ifdef SEEHI_SECUREBOOT
 #include <seehi_secureboot.h>
@@ -43,6 +43,8 @@ void bl2_early_platform_setup2(u_register_t arg0, u_register_t arg1,
 	int ret = 0;
 
 	meminfo_t *mem_layout = (void *)arg1;
+
+	wait_fpga_ddr_calibration_done();
 
 	if (IS_ASIC == 1)
 		set_clk();
